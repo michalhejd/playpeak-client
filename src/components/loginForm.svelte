@@ -84,7 +84,7 @@
 		</div>
 		{#if errorEmail !== undefined}
 			<div class="errorEmail">
-				<span class="material-symbols-outlined"/>
+				<span class="material-symbols-outlined"> error </span>
 				<p>{errorEmail}</p>
 			</div>
 		{/if}
@@ -102,7 +102,7 @@
 		</div>
 		{#if errorPassword !== undefined}
 			<div class="errorPassword">
-				<span class="material-symbols-outlined"/>
+				<span class="material-symbols-outlined"> error </span>
 				<p>{errorPassword}</p>
 			</div>
 		{/if}
