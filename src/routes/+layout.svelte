@@ -1,53 +1,33 @@
-<script>
-	import Header from './Header.svelte';
-	import './styles.css';
+<script lang="ts">
+	import './styles.scss';
+	import './reset.scss';
+	import { beforeUpdate, onMount } from 'svelte';
+	import { token } from "../stores/store"
+
+
+	onMount(async () => {
+		if(localStorage.getItem("token") !== null) {
+			token.set(localStorage.getItem("token"))
+			let val: any = null
+			token.subscribe((v: any) => val = v)
+			localStorage.removeItem("token")
+			localStorage.setItem("token", val)
+		}
+	})
+
+	/*window.addEventListener("unload", () => {
+		let value: any = null
+		token.subscribe((v: any) => value = v)
+		localStorage.removeItem("token")
+		localStorage.setItem("token", value)
+	})*/
 </script>
 
 <div class="app">
-	<Header />
-
 	<main>
 		<slot />
 	</main>
-
-	<footer>
-		<p>visit <a href="https://kit.svelte.dev">kit.svelte.dev</a> to learn SvelteKit</p>
-	</footer>
 </div>
 
 <style>
-	.app {
-		display: flex;
-		flex-direction: column;
-		min-height: 100vh;
-	}
-
-	main {
-		flex: 1;
-		display: flex;
-		flex-direction: column;
-		padding: 1rem;
-		width: 100%;
-		max-width: 64rem;
-		margin: 0 auto;
-		box-sizing: border-box;
-	}
-
-	footer {
-		display: flex;
-		flex-direction: column;
-		justify-content: center;
-		align-items: center;
-		padding: 12px;
-	}
-
-	footer a {
-		font-weight: bold;
-	}
-
-	@media (min-width: 480px) {
-		footer {
-			padding: 12px 0;
-		}
-	}
 </style>

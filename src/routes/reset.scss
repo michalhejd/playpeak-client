@@ -1,0 +1,14 @@
+html, body{
+    margin: 0;
+    padding: 0;
+}
+
+div, span, h1, h2, h3, h4, h5, h6, p, a, ul, li, ol, button, input, textarea, select, form, table, tr, td, th, label, i, b, strong, em, small, img, svg, canvas, figure, figcaption, blockquote, pre, code, address, dl, dt, dd, fieldset, legend, caption, hr, details, summary, menu, menuitem, article, aside, footer, header, nav, section, main, video, audio, iframe, object, embed, param, source, track, canvas, noscript, script, style, template, time, mark, output, progress, details, summary, menu, menuitem, article, aside, footer, header, nav, section, main, video, audio, iframe, object, embed, param, source, track, canvas, noscript, script, style, template, time, mark, output, progress, meter input:focus{
+    margin: 0;
+    padding: 0;
+    border: 0;
+    outline: 0;
+    font-size: 100%;
+    vertical-align: baseline;
+    box-sizing: border-box;
+}

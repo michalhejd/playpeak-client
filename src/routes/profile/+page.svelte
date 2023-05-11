@@ -1,0 +1,83 @@
+<script lang="ts">
+	import { page } from '$app/stores';
+	import ProfileCard from '../../components/profileCard.svelte';
+	import { req } from '../../plugins/axios';
+	import type { PageData } from './$types';
+
+	export let data: PageData;
+</script>
+
+<div class="profile">
+	<div class="sideNav">
+		<ProfileCard name={data.name} role={data.role} />
+		<nav>
+			<div class="items">
+				<a href="/profile" class:active={$page.url.pathname == '/profile'}>
+					<div class="box">
+						<p>Domů</p>
+					</div>
+				</a>
+				<a href="/tournaments" class:active={$page.url.pathname == '/tournaments'}>
+					<div class="box">
+						<p>Turnaje</p>
+					</div>
+			</div>
+		</nav>
+	</div>
+	<div class="content" />
+</div>
+
+<style lang="scss" scoped>
+	.profile {
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		justify-content: center;
+		width: 100%;
+		height: 100vh;
+		.sideNav {
+			width: 400px;
+			height: 100%;
+			padding: 60px 20px;
+			nav {
+				margin-top: 20px;
+				margin-left: 15px;
+				.items {
+					display: flex;
+					flex-direction: column;
+					align-items: left;
+					justify-content: center;
+					margin: 10px 0;
+					a {
+						margin-top: 5px;
+						font-size: 13px;
+						color: #f5f5f5;
+						font-weight: 300;
+						text-decoration: none;
+						.box {
+							padding: 15px 25px;
+							width: 100%;
+							border-radius: 5px;
+							p {
+								margin-left: 5px;
+								font-weight: 300;
+								font-size: 13px;
+								color: var(--default-text-color);
+							}
+							&:hover {
+								background-color: #121212;
+							}
+						}
+						&.active > .box {
+							background-color: #121212;
+						}
+					}
+				}
+			}
+		}
+		.content {
+			width: 100%;
+			height: 100%;
+		}
+	}
+</style>
