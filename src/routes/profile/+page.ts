@@ -2,20 +2,29 @@
 // it so that it gets served as a static asset in production
 import { req } from "../../plugins/axios";
 import { goto } from "$app/navigation";
+import { token } from "../../stores/store";
 export const prerender = true;
 export const csr = true;
 export const ssr = false;
 
 export const load = async () => {
-    if(!localStorage.getItem('token')) return goto('/');
-    const user = await req.get('/users/@self',
-    {
-        headers: {
-            Authorization: `Bearer ${localStorage.getItem('token')}`
+    if (!localStorage.getItem('token')) return goto('/');
+    try {
+        const user: any = await req.get('/users/@self',
+        {
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem('token')}`
+            }
+        })
+        if (user.status === 200) {
+            return user.data.data
         }
-    });
-    if(user.status !== 200) {
-        return goto('/');
+    } catch (error: any) {
+        if (error.response.data.meta.error === "token_unauthorized") {
+            localStorage.removeItem('token');
+            return goto('/');
+        }
     }
-    return user.data.data
+    return
 }
+

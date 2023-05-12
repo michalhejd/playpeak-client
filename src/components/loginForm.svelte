@@ -1,12 +1,13 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import { req } from '../plugins/axios.js';
-	import { token } from '../stores/store.js';
+	import { token } from '../stores/store';
 
 	let loading: boolean = false;
 	$: loading_class = loading ? 'loading' : '';
 
 	let email = '';
+
 	let password = '';
 
 	let watchedEmail: string | undefined = undefined;
@@ -28,10 +29,12 @@
 				console.log(response);
 				loading = false;
 				localStorage.setItem('token', response.data.data.token);
+				token.set(localStorage.getItem("token"))
 				return goto('/profile');
 			})
 			.catch((err) => {
 				console.log(err)
+				console.log(err.response.data.meta)
 				errorEmail = err.response.data.meta.message;
 				errorPassword = err.response.data.meta.message;
 				watchedEmail = email;

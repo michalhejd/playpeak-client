@@ -2,6 +2,7 @@
 // it so that it gets served as a static asset in production
 import { goto } from "$app/navigation";
 import { req } from "../plugins/axios";
+import { token } from "../stores/store";
 export const prerender = true;
 export const csr = true;
 export const ssr = false;

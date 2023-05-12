@@ -1,60 +1,42 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
-	import { req } from '../plugins/axios';
-	import { verificationEmail } from '../stores/store';
+	import { req } from '../plugins/axios.js';
+	import { verificationEmail } from '../stores/store.js';
+
 	let loading: boolean = false;
 	$: loading_class = loading ? 'loading' : '';
 
-	let email = '';
-	let name = '';
-	let nickname = '';
-	let password = '';
-	let birthdate = '';
+    export let email: any;
 
-	//watched values
+	verificationEmail.subscribe((v: any) => email = v)
+    
+	let code = '';
+
 	let watchedEmail: string | undefined = undefined;
-
-	let watchedName: string | undefined = undefined;
-
-	let watchedNickname: string | undefined = undefined;
 
 	let watchedPassword: string | undefined = undefined;
 
-	let watchedBirthdate: string | undefined = undefined;
-
-	//error messages
 	let errorEmail: string | undefined = undefined;
-
-	let errorName: string | undefined = undefined;
-
-	let errorNickname: string | undefined = undefined;
 
 	let errorPassword: string | undefined = undefined;
 
-	let errorBirthdate: string | undefined = undefined;
-
-	function register() {
+	function login() {
 		loading = true;
 		req
-			.post('/users/register', {
-				email: email,
-				name: name,
-				nickname: nickname,
-				password: password,
-				birthdate: birthdate
+			.patch('/users/verify', {
+                email: email,
+				code: code
 			})
 			.then((response) => {
 				console.log(response);
 				loading = false;
-				verificationEmail.set(email);
-				goto('/verification');
+                goto('/');
 			})
 			.catch((err) => {
+				console.log(err);
 				errorEmail = err.response.data.meta.message;
 				errorPassword = err.response.data.meta.message;
-				watchedEmail = email;
 				loading = false;
-				alert('Registrace se nezdařila');
 			});
 	}
 
@@ -62,52 +44,20 @@
 		if (watchedEmail?.length !== errorEmail?.length) {
 			errorEmail = undefined;
 		}
-		if (watchedName?.length !== errorName?.length) {
-			errorName = undefined;
-		}
-		if (watchedNickname?.length !== errorNickname?.length) {
-			errorNickname = undefined;
-		}
 		if (watchedPassword?.length !== errorPassword?.length) {
 			errorPassword = undefined;
-		}
-		if (watchedBirthdate?.length !== errorBirthdate?.length) {
-			errorBirthdate = undefined;
 		}
 	}
 
 	function checkForm() {
-		if (email.length < 1) {
-			errorEmail = 'Email nemůže být prázdný';
+		if (code.length < 1) {
+			errorPassword = 'Kód nemůže být prázdný';
 		}
-		if (email.length > 0 && !email.includes('@')) {
-			errorEmail = 'Email musí obsahovat @';
-		}
-
-		if (name.length < 1) {
-			errorName = 'Jméno nemůže být prázdné';
-		}
-
-		if (nickname.length < 1) {
-			errorNickname = 'Přezdívka nemůže být prázdná';
-		}
-
-		if (password.length < 1) {
-			errorPassword = 'Heslo nemůže být prázdné';
-		}
-
-		if (birthdate.length < 1) {
-			errorBirthdate = 'Datum narození nemůže být prázdné';
-		}
-
-		if (
-			errorPassword === undefined &&
-			errorEmail === undefined &&
-			errorName === undefined &&
-			errorNickname === undefined &&
-			errorBirthdate === undefined
-		) {
-			return register();
+        if(code.length > 6) {
+            errorPassword = 'Kód nemůže být delší než 6 znaků'
+        }
+		if (errorPassword === undefined && errorEmail === undefined) {
+			return login();
 		}
 	}
 </script>
@@ -119,16 +69,10 @@
 	<p>Platforma pro herní nadšence</p>
 	<form on:submit={checkForm} novalidate>
 		<div class="email">
-			<label for="email" class:error={errorEmail !== undefined}>Email</label>
-			<input
-				type="email"
-				name=""
-				id="email"
-				class:error={errorEmail !== undefined}
-				bind:value={email}
-				on:input={watchForm}
-				placeholder="example@skola.ssps.cz"
-			/>
+			<div class="box">
+				<span class="material-symbols-outlined"> email </span>
+                <p>{ email }</p>
+			</div>
 		</div>
 		{#if errorEmail !== undefined}
 			<div class="errorEmail">
@@ -136,52 +80,18 @@
 				<p>{errorEmail}</p>
 			</div>
 		{/if}
-		<div class="name">
-			<label for="name" class:error={errorName !== undefined}>Jméno a příjmení</label>
+		<div class="code">
+			<label for="code" class:error={errorPassword !== undefined}>Heslo</label>
 			<input
-				type="text"
-				name=""
-				id="name"
-				class:error={errorName !== undefined}
-				bind:value={name}
-				on:input={watchForm}
-				placeholder="Jan Novák"
-			/>
-		</div>
-		{#if errorName !== undefined}
-			<div class="errorName">
-				<span class="material-symbols-outlined"> error </span>
-				<p>{errorName}</p>
-			</div>
-		{/if}
-		<div class="nickname">
-			<label for="nickname" class:error={errorNickname !== undefined}>Přezdívka</label>
-			<input
-				type="text"
-				name=""
-				id="nickname"
-				class:error={errorNickname !== undefined}
-				bind:value={nickname}
-				on:input={watchForm}
-				placeholder="Janik"
-			/>
-		</div>
-		{#if errorNickname !== undefined}
-			<div class="errorNickname">
-				<span class="material-symbols-outlined"> error </span>
-				<p>{errorNickname}</p>
-			</div>
-		{/if}
-		<div class="password">
-			<label for="password" class:error={errorPassword !== undefined}>Heslo</label>
-			<input
-				type="password"
-				name=""
-				id="password"
+                type="text"
+                pattern="[0-9]"
+                autocomplete="off"
+				id="code"
+                maxlength="6"
 				class:error={errorPassword !== undefined}
-				bind:value={password}
+				bind:value={code}
 				on:input={watchForm}
-				placeholder="&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;"
+				placeholder="123456"
 			/>
 		</div>
 		{#if errorPassword !== undefined}
@@ -190,23 +100,9 @@
 				<p>{errorPassword}</p>
 			</div>
 		{/if}
-		<div class="birthdate">
-			<label for="birthdate" class:error={errorBirthdate !== undefined}>Datum narození</label>
-			<input
-				type="date"
-				name=""
-				id="birthdate"
-				class:error={errorBirthdate !== undefined}
-				bind:value={birthdate}
-				on:input={watchForm}
-			/>
-		</div>
-		{#if errorBirthdate !== undefined}
-			<div class="errorBirthdate">
-				<span class="material-symbols-outlined"> error </span>
-				<p>{errorBirthdate}</p>
-			</div>
-		{/if}
+		<p class="lostPassword">
+			Zapomněl jsi své heslo? Obnov si ho <a href="/resetPassword">zde</a>.
+		</p>
 		<div class="button {loading_class}" on:mousedown={checkForm}>
 			<input
 				type="submit"
@@ -214,13 +110,13 @@
 				tabindex="-1"
 			/>
 			{#if !loading}
-				<p>Registrovat</p>
+				<p>Ověřit</p>
 			{/if}
 			{#if loading}
 				<span class="loader" />
 			{/if}
 		</div>
-		<p class="register">Už jsi se zaregistroval? <a href="/">Přihlaš se</a>!</p>
+		<p class="register">Nemáš ještě účet? <a href="/register">Zaregistruj se</a>!</p>
 	</form>
 </div>
 
@@ -310,17 +206,8 @@
 					}
 				}
 			}
-			.password > input {
-				&::placeholder {
-					font-size: 7px;
-					letter-spacing: 1px;
-				}
-			}
 			.errorEmail,
-			.errorPassword,
-			.errorName,
-			.errorNickname,
-			.errorBirthdate {
+			.errorPassword {
 				margin-top: 5px;
 				display: flex;
 				align-items: center;
@@ -346,7 +233,7 @@
 				color: var(--third-text-color);
 				font-weight: 300;
 				a {
-					color: var(--blue-text-color);
+					color: var(--default-text-color);
 					text-decoration: none;
 					font-weight: 400;
 					&:hover {
@@ -361,8 +248,8 @@
 				justify-content: center;
 				width: 100%;
 				height: $input-height;
-				background-color: var(--blue);
-				color: var(--default-text-color);
+				background-color: #58ff9b;
+				color: #000000;
 				border-radius: 5px;
 				-webkit-user-select: none; /* Safari */
 				-ms-user-select: none; /* IE 10 and IE 11 */
@@ -410,13 +297,33 @@
 				margin-top: 10px;
 				text-align: center;
 				a {
-					color: var(--blue-text-color);
+					color: var(--default-text-color);
 					text-decoration: none;
 					font-weight: 400;
 					&:hover {
 						text-decoration: underline;
 					}
 				}
+			}
+			.box {
+				width: 100%;
+				height: $input-height + 10px;
+				border-radius: 5px;
+				background-color: #1d1d1d;
+                display: flex;
+                align-items: center;
+                padding: 0 20px;
+				.material-symbols-outlined {
+					font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 16;
+                    color: var(--third-text-color);
+                    font-size: 21px;
+				}
+                p{
+                    margin-left: 10px;
+                    font-size: 14px;
+                    color: var(--third-text-color);
+                    font-weight: 400;
+                }
 			}
 		}
 	}

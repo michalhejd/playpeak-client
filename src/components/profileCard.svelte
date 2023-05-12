@@ -2,7 +2,7 @@
 	import { IconAdjustmentsAlt } from '@tabler/icons-svelte';
 	
 	export let name: string;
-	export let role: string;
+	export let role: number;
 </script>
 
 <div class="profileCard">
@@ -10,7 +10,7 @@
 	<div class="box">
 		<div class="info">
 			<div class="name">{ name }</div>
-			<div class="role">{ role }</div>
+			<div class="role">{ (role == 0) ? "Hráč" : (role == 1) ? "Admin" : (role == 2) ? "Super admin" : (role == 3) ? "Root" : "Neznámá role"}</div>
 		</div>
 			<button class="edit">
 			</button>

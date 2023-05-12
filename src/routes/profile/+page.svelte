@@ -1,10 +1,17 @@
 <script lang="ts">
+	import { goto } from '$app/navigation';
 	import { page } from '$app/stores';
 	import ProfileCard from '../../components/profileCard.svelte';
 	import { req } from '../../plugins/axios';
 	import type { PageData } from './$types';
 
 	export let data: PageData;
+	console.log(data)
+
+	function logout() {
+		localStorage.removeItem('token');
+		goto('/');
+	}
 </script>
 
 <div class="profile">
@@ -21,6 +28,10 @@
 					<div class="box">
 						<p>Turnaje</p>
 					</div>
+				</a>
+				<div class="box" on:mousedown={logout}>
+					<p>Odhlásit</p>
+				</div>
 			</div>
 		</nav>
 	</div>
@@ -54,10 +65,12 @@
 						color: #f5f5f5;
 						font-weight: 300;
 						text-decoration: none;
-						.box {
+					}
+					.box {
 							padding: 15px 25px;
 							width: 100%;
 							border-radius: 5px;
+							cursor: pointer;
 							p {
 								margin-left: 5px;
 								font-weight: 300;
@@ -71,7 +84,6 @@
 						&.active > .box {
 							background-color: #121212;
 						}
-					}
 				}
 			}
 		}
