@@ -66,6 +66,7 @@
 </div>
 
 <style lang="scss" scoped>
+    $sideNav-width: 300px;
 	.profile {
 		display: flex;
 		flex-direction: row;
@@ -74,7 +75,7 @@
 		width: 100%;
 		height: 100vh;
 		.sideNav {
-			width: 400px;
+			width: $sideNav-width;
 			height: 100%;
 			padding: 60px 20px;
 			nav {
@@ -115,7 +116,7 @@
 			}
 		}
 		.content {
-			width: 100%;
+			width: calc(100% - $sideNav-width);
 			height: 100%;
 		}
 	}
