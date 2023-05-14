@@ -3,10 +3,10 @@
 	import { page } from '$app/stores';
 	import ProfileCard from '../../components/profileCard.svelte';
 	import { req } from '../../plugins/axios';
-	import type { LayoutData, PageData } from './$types';
+	import type { LayoutData } from './$types';
 
 	export let data: LayoutData;
-	console.log(data);
+    let me = data.me
 
 	function logout() {
 		localStorage.removeItem('token');
@@ -16,7 +16,7 @@
 
 <div class="profile">
 	<div class="sideNav">
-		<ProfileCard name={data.name} role={data.role} />
+		<ProfileCard name={me.name} role={me.role} />
 		<nav>
 			<div class="items">
 				<a href="/profile" class:active={$page.url.pathname == '/profile'}>
@@ -118,6 +118,7 @@
 		.content {
 			width: calc(100% - $sideNav-width);
 			height: 100%;
+            padding: 100px 20px;
 		}
 	}
 </style>

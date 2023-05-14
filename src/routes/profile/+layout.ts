@@ -17,7 +17,9 @@ export const load = async () => {
             }
         })
         if (user.status === 200) {
-            return user.data.data
+            return {
+                me: user.data.data
+            }
         }
     } catch (error: any) {
         if (error.response.data.meta.error === "token_unauthorized") {
