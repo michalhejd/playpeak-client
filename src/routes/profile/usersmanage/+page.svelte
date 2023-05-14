@@ -56,7 +56,7 @@
 			input {
 				width: calc( 100% - 20px);
 				padding: 10px;
-				font-size: 13px;
+				font-size: 12px;
 				background-color: transparent;
 				color: #b7b7b7;
 				&::placeholder {
