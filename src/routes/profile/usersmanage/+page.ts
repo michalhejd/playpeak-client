@@ -19,6 +19,7 @@ export const load = async () => {
             }
         }
     } catch (error: any) {
+        if(error.response.data.meta.error == "forbidden") return goto('/')
         if (error.response.data.meta.error === "token_unauthorized" || error.response.data.meta.error === "unauthorized") {
             localStorage.removeItem('token');
             return goto('/');
