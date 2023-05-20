@@ -7,8 +7,6 @@ export const prerender = true;
 export const csr = true;
 export const ssr = false;
 
-//if token is in localstorage then send request to @self and if it will be 200 then set user
-
 export const load = async () => {
     if(!localStorage.getItem('token')) return
     const user = await req.get('/users/@self',

@@ -39,7 +39,7 @@
 						<p>Správa turnajů</p>
 					</div>
 				</a>
-				<a href="/profile/usersmanage" class:active={$page.url.pathname == '/profile/usersmanage'}>
+				<a href="/profile/usersmanage" data-sveltekit-preload-data="hover" class:active={$page.url.pathname == '/profile/usersmanage'}>
 					<div class="box">
 						<p>Správa uživatelů</p>
 					</div>

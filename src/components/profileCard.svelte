@@ -3,10 +3,16 @@
 	
 	export let name: string;
 	export let role: number;
+
+	let firstNameLetter = name[0];
+	let firstSurnameLetter = name.split(' ')[1][0];
+	let lettersTogether = firstNameLetter + firstSurnameLetter;
 </script>
 
 <div class="profileCard">
-	<div class="picture" />
+	<div class="picture">
+		<p>{lettersTogether}</p>
+		</div>
 	<div class="box">
 		<div class="info">
 			<div class="name">{ name }</div>
@@ -28,8 +34,15 @@
 		.picture {
             width: 50px;
             height: 50px;
-            background-color: #999999;
+            background-color: #F5F5F5;
             border-radius: 50%;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			p{
+				color: #1C1C1C;
+				font-weight: 500;
+			}
 		}
         .box{
             width: calc(100% - 40px);

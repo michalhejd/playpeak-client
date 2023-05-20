@@ -1,8 +1,39 @@
 <script lang="ts">
+    import { req } from '../plugins/axios';
+import { usersManageProfile } from '../stores/store';
+import { goto } from '$app/navigation';
+
 	export let users: any[] = [];
+
+    let viewedUser: any = null
+
+    let tbWidth: any = '0px'
+
+	usersManageProfile.subscribe((v:any) => {
+		viewedUser = v
+        tbWidth = viewedUser ? '310px': '0px'
+	});
+    console.log(tbWidth)
+    console.log(viewedUser)
+
+    async function openUserProfile(id: any){
+		if(viewedUser && viewedUser._id == id) return usersManageProfile.set(null)
+        await req.get("/users/" + id, {
+            headers: {
+                Authorization: "Bearer " + localStorage.getItem("token")
+            }
+        }).then((res) => {
+            return usersManageProfile.set(res.data.data)
+        }).catch((err) => {
+            if(err.response.data.meta.error === "token_unauthorized" || err.response.data.meta.error === "unauthorized"){
+                localStorage.removeItem("token")
+                return goto("/")
+            }
+        })
+    }
 </script>
 
-<div class="table">
+<div class="table" style="--tb-width: {tbWidth}">
 	<table>
 		<thead>
 			<tr>
@@ -12,8 +43,8 @@
 				<th> Nickname </th>
 				<th> Birthdate </th>
 				<th> Last activity </th>
-				<th data-center> Role </th>
-				<th data-center> Group </th>
+				<th> Role </th>
+				<th> Group </th>
 				<th data-center> View </th>
 			</tr>
 		</thead>
@@ -26,7 +57,7 @@
 					<td> {user.nickname} </td>
 					<td> {user.birthdate} </td>
 					<td> {user.lastActivity} </td>
-					<td data-center>
+					<td >
 						{user.role == 0
 							? 'Hráč'
 							: user.role == 1
@@ -37,9 +68,9 @@
 							? 'Root'
 							: 'Neznámá role'}
 					</td>
-					<td data-center> {user.group} </td>
-					<td data-center>
-						<div class="box">
+					<td> {user.group} </td>
+					<td data-center>	
+						<div class="box" class:active={viewedUser && (viewedUser._id == user._id) } on:mousedown={() => openUserProfile(user._id)}>
 							<span class="material-symbols-outlined"> visibility </span>
 						</div>
 					</td>
@@ -64,8 +95,9 @@
 		height: 650px;
 		overflow-y: scroll;
 		border-radius: 5px;
+        width: calc(100% - var(--tb-width));
 		table {
-			width: 100%;
+            width: 100%;
 			background-color: #121212;
 			border-collapse: collapse;
 			-webkit-border-horizontal-spacing: -0px;
@@ -115,6 +147,10 @@
 						font-variation-settings: 'FILL' 0, 'wght' 500, 'GRAD' 0, 'opsz' 24;
 						font-size: 14px;
 					}
+					&.active{
+						background-color: #929292;
+						color: #e0e0e0;
+					}	
 				}
 			}
 			tr {
