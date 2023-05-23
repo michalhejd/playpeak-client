@@ -3,6 +3,7 @@
 	import { page } from '$app/stores';
 	import ProfileCard from '../../components/profileCard.svelte';
 	import { req } from '../../plugins/axios';
+	import { token } from '../../stores/store';
 	import type { LayoutData } from './$types';
 
 	export let data: LayoutData;
@@ -10,6 +11,7 @@
 
 	function logout() {
 		localStorage.removeItem('token');
+		token.set(null)
 		goto('/');
 	}
 </script>

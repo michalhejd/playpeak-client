@@ -4,7 +4,7 @@
 	import UsersTable from '../../../components/usersTable.svelte';
 	import type { PageData } from './$types';
 	import { usersManageProfile } from '../../../stores/store';
-	import timeFormat from '../../../utils/timeFormatter';
+	import { timeFormat, timeFormatToLocale } from '../../../utils/timeFormatter';
 
 	export let data: PageData;
 	let users = data.users.users;
@@ -68,11 +68,11 @@
 				<p>{user.nickname}</p>
 				<p>{user.role}</p>
 				<p>{user.group}</p>
-				<p>{timeFormat(user.lastActivity)}</p>
-				<p>{user.birthdate}</p>
+				<p>{timeFormatToLocale(user.lastActivity)}</p>
+				<p>{timeFormat(user.birthdate)}</p>
 				<p>{user.verified}</p>
-				<p>{timeFormat(user.createdAt)}</p>
-				<p>{timeFormat(user.updatedAt)}</p>
+				<p>{timeFormatToLocale(user.createdAt)}</p>
+				<p>{timeFormatToLocale(user.updatedAt)}</p>
 			</div>
 		</div>
 	{/if}
