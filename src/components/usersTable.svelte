@@ -112,6 +112,7 @@ import { goto } from '$app/navigation';
 				font-size: 10px;
 				text-align: left;
 				background-color: #161616;
+				white-space: nowrap;
 				&:nth-child(1) {
 					border-top-left-radius: 5px;
 				}

@@ -5,6 +5,7 @@
 	import type { PageData } from './$types';
 	import { usersManageProfile } from '../../../stores/store';
 	import { timeFormat, timeFormatToLocale } from '../../../utils/timeFormatter';
+	import { logout } from '../../../utils/manageUser';
 
 	export let data: PageData;
 	let users = data.users.users;
@@ -25,20 +26,22 @@
 			})
 			.then((res) => {
 				users = res.data.data.users;
-			}).catch((error) => {
-				if (error.response.data.meta.error === "token_unauthorized" || error.response.data.meta.error === "unauthorized") {
-            localStorage.removeItem('token');
-            return goto('/');
-        }
+			})
+			.catch((error) => {
+				if (
+					error.response.data.meta.error === 'token_unauthorized' ||
+					error.response.data.meta.error === 'unauthorized'
+				) {
+					return logout();
+				}
 			});
 	}
 
-	let user: any = null
+	let user: any = null;
 
-	usersManageProfile.subscribe((v:any) => {
-		user = v
+	usersManageProfile.subscribe((v: any) => {
+		user = v;
 	});
-
 </script>
 
 <div class="usersManage">
@@ -59,23 +62,23 @@
 	</div>
 	<div class="r2">
 		<UsersTable {users} />
-	{#if user}
-		<div class="userProfile">
-			<div class="userProfileHeader">
-				<p>{user._id}</p>
-				<p>{user.email}</p>
-				<p>{user.name}</p>
-				<p>{user.nickname}</p>
-				<p>{user.role}</p>
-				<p>{user.group}</p>
-				<p>{timeFormatToLocale(user.lastActivity)}</p>
-				<p>{timeFormat(user.birthdate)}</p>
-				<p>{user.verified}</p>
-				<p>{timeFormatToLocale(user.createdAt)}</p>
-				<p>{timeFormatToLocale(user.updatedAt)}</p>
+		{#if user}
+			<div class="userProfile">
+				<div class="userProfileHeader">
+					<p>{user._id}</p>
+					<p>{user.email}</p>
+					<p>{user.name}</p>
+					<p>{user.nickname}</p>
+					<p>{user.role}</p>
+					<p>{user.group}</p>
+					<p>{timeFormatToLocale(user.lastActivity)}</p>
+					<p>{timeFormat(user.birthdate)}</p>
+					<p>{user.verified}</p>
+					<p>{timeFormatToLocale(user.createdAt)}</p>
+					<p>{timeFormatToLocale(user.updatedAt)}</p>
+				</div>
 			</div>
-		</div>
-	{/if}
+		{/if}
 	</div>
 </div>
 

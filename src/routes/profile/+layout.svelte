@@ -3,17 +3,12 @@
 	import { page } from '$app/stores';
 	import ProfileCard from '../../components/profileCard.svelte';
 	import { req } from '../../plugins/axios';
-	import { token } from '../../stores/store';
 	import type { LayoutData } from './$types';
+	import { logout } from '../../utils/manageUser';
 
 	export let data: LayoutData;
     let me = data.me
 
-	function logout() {
-		localStorage.removeItem('token');
-		token.set(null)
-		goto('/');
-	}
 </script>
 
 <div class="profile">

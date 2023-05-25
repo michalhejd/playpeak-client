@@ -3,5 +3,6 @@ export function timeFormatToLocale(date: Date) {
 }
 
 export function timeFormat(date: Date){
-    return new Date(date)
+    //date without hours
+    return new Date(date).toLocaleDateString();
 }
